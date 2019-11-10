@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,17 +36,36 @@ class PostController extends AbstractController
     public function create(Request $request)
     {
         // create a new post with title
-        $post =  new Post();
-        $post->setTitle('This is my '.random_int(1,1000).' title !!');
+        //$post =  new Post();
+        //$post->setTitle('This is my '.random_int(1,1000).' title !!');
 
         // entity manager
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
-        $em->persist($post);
-        $em->flush();
+        //$em->persist($post);
+        //$em->flush();
 
         //return New Response('Post created');
-        return $this->redirect($this->generateUrl('post.index'));
+        //return $this->redirect($this->generateUrl('post.index'));
+
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+        $form->getErrors();
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            return $this->redirectToRoute('post.index');
+            //dump($post);
+        }
+
+        return $this->render('post/create.html.twig', [
+            'form'      => $form->createView()
+        ]);
     }
 
     /**
