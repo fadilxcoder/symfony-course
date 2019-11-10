@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PostController!{% endblock %}
+
+{% block body %}
+    <h1>List of post</h1>
+    {# read and display all flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Title</td>
+                <td>Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for _posts in posts %}
+            <tr>
+                <td>{{ _posts.id }}</td>
+                <td><a href="{{ path('post.show', {id: _posts.id}) }}">{{ _posts.title }}</a> </td>
+                <td><a class="text-danger" href="{{ path('post.delete', {id:_posts.id}) }}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
