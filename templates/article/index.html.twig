@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>List of Articles</h1>
+    <a href="{{ path('createArticle') }}" class="btn btn-primary btn-lg float-right">Create Article</a>
+    <br><br><br>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Title</td>
+            <td colspan="2">Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for _articles in articles %}
+            <tr>
+                <td>{{ _articles.id }}</td>
+                <td><a href="{{ path('viewArticle', {id:_articles.id }) }}">{{ _articles.title }}</a> </td>
+                <td><a class="text-secondary" href="{{ path('editArticle', {id:_articles.id}) }}">Edit</a></td>
+                <td><a class="text-danger" href="#">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        th, td {
+            padding: 10px;
+        }
+        th {
+            text-align: right;
+        }
+    </style>
+
+    <h1>Article #{{ article.id }}</h1>
+    <br><br><br>
+    <a href="{{ path('showArticles') }}" class="btn btn-primary btn-lg float-right">Back</a>
+    <table>
+        <tbody>
+        <tr>
+            <th>Title:</th>
+            <td>{{ article.title }}</td>
+        </tr>
+        <tr>
+            <th>Author:</th>
+            <td>{{ article.author }}</td>
+        </tr>
+        <tr>
+            <th>Article Body:</th>
+            <td>{{ article.body }}</td>
+        </tr>
+        <tr>
+            <th>Homepage:</th>
+            <td>{{ article.url }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}
