@@ -47,4 +47,17 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param $role
+     * @return mixed
+     */
+    public function findUsersByRole($role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.level = :_role')
+            ->setParameter('_role', $role)
+            ->getQuery()
+            ->getResult();
+    }
 }

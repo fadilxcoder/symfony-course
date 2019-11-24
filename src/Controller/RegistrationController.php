@@ -41,6 +41,7 @@ class RegistrationController extends AbstractController
 
             $user = new User();
             $user->setUsername($data['username']);
+            $user->setLevel(true);
             $user->setPassword(
                 $passwordEncoder->encodePassword($user, $data['password'])
             );

@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\User;
 use App\Form\ArticleType;
+use App\Services\Mailing;
+use App\Services\ObjectCompare;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,6 +19,11 @@ class ArticleController extends AbstractController
      */
     public function index()
     {
+//        $entityManager = $this->getDoctrine()->getManager();
+//        $_user_dump = $entityManager->getRepository(User::class)->findUsersByRole(User::ROLE);
+//        dump($_user_dump);
+//        die;
+
         $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
         return $this->render('article/index.html.twig',[
             'articles'  => $articles
@@ -33,13 +42,15 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted()) {
             $article = $form->getData();
-
+            $article->setStatus(0);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($article);
+            $em->persist($article); // use only when inserting into Database
             $em->flush();
 
             $this->addFlash('success', 'Article successfully created !');
-            return $this->redirectToRoute('showArticles');
+            return new RedirectResponse($this->generateUrl('viewArticle', [
+                'id' => $article->getId()
+            ]));
         }
 
         return $this->render('article/edit.html.twig', [
@@ -48,7 +59,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("view-article/{id}", name="viewArticle")
+     * @Route("/view-article/{id}", name="viewArticle")
      */
     public function viewArticle($id)
     {
@@ -64,9 +75,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("edit-article/{id}", name="editArticle")
-     */
+
     public function updateArticle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -82,7 +91,6 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            //$article = $form->getData();
             $em->flush();
             return $this->redirect($this->generateUrl('viewArticle', [
                 'id' => $id
@@ -92,5 +100,77 @@ class ArticleController extends AbstractController
         return $this->render('article/edit.html.twig', [
             'form'  => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/edit-article/{article}", name="editArticle")
+     */
+    public function modifyArticle(Request $request, ? Article $article)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if (!$article) {
+            $this->addFlash('danger', 'There are no articles with the following id');
+            return $this->redirectToRoute('showArticles');
+        }
+
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article->setAlias('symfony-'.rand(1,99999));
+            $entityManager->flush();
+            return $this->redirectToRoute('viewArticle', [
+                'id' => $article->getId()
+            ]);
+        }
+
+        return $this->render('article/edit.html.twig', [
+            'form'  => $form->createView(),
+            'article'   => $article
+        ]);
+    }
+
+    /**
+     * @Route("/ajax-handler/{articleData}", name="ajaxHandler")
+     */
+    public function ajaxHandler(Request $request, Article $articleData, ObjectCompare $objectCompare, Mailing $mailing)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $orjObj = clone $articleData;
+
+            $submittedArticle = $request->request->get('article');
+            $status = $submittedArticle['status'];
+            $articleData->setStatus($status);
+
+            if ( $objectCompare->compareTwoObj($orjObj, $submittedArticle) == false) {
+                $articleData->setStatus($status);
+                $mailing->notifyChanges($articleData);
+                $entityManager->flush();
+                $this->addFlash(
+                    'success',
+                    'Article with ID : '.$articleData->getId().' status has been updated.'
+                );
+
+                $url = $this->generateUrl('viewArticle', [
+                    'id'    => $articleData->getId()
+                ]);
+            } else {
+                $this->addFlash(
+                    'warning',
+                    'No change in Article with ID : '.$articleData->getId()
+                );
+                $url = $this->generateUrl('viewArticle', [
+                    'id'    => $articleData->getId()
+                ]);
+            }
+
+            return $this->json([
+                'url'   => $url
+            ]);
+
+        }
     }
 }

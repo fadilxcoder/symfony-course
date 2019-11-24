@@ -1,7 +1,6 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
-
     <style>
         th, td {
             padding: 10px;
@@ -9,11 +8,36 @@
         th {
             text-align: right;
         }
+        td{
+            width: 100%;
+        }
     </style>
-
     <h1>Create or Update Article:</h1>
 
-    {{ form_start(form) }}
+    {#
+    validation by route name
+    {% if app.request.get('_route') == 'editArticle' %}
+        <form id="status-bar">
+            <button class="btn btn-primary btn-lg float-right">STATUS</button>
+        </form>
+        <br><br><br>
+    {% endif %}
+     #}
+
+    {% if article is defined and article.id %}
+        <form id="status-bar">
+            <fieldset class="form-group">
+                <legend>{{ form_label(form.status) }}:</legend>
+                {{ form_widget(form.status) }}
+                <br>
+                <button class="btn btn-primary btn-lg float-right">Change</button>
+            </fieldset>
+        </form>
+        <hr/>
+    {% endif %}
+
+    {#    {{ form_start(form) }} #}
+    {{ form_start(form, {'action': path('editArticle', {"article":article.id}), 'method': 'POST'}) }}
 
     <table>
         <tbody>
@@ -39,7 +63,32 @@
         </tr>
         </tbody>
     </table>
+    {#    {{ form_end(form) }}#}
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
 
-    {{ form_end(form) }}
-
+{% endblock %}
+{% block javascripts %}
+    {% if article is defined and article.id %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#status-bar button').on('click', function(){
+                //alert({{ article.id }});
+                var $statusForm = $('#status-bar');
+                $.ajax({
+                    type    : 'POST',
+                    data    : $statusForm.serializeArray(),
+                    url     : '{{ path('ajaxHandler', {'articleData':article.id}) }}',
+                    dataType: 'json',
+                    success : function(information){
+                        //console.log(information);
+                        window.location.href = information.url
+                    }
+                });
+                return false; // prevent form reload
+            });
+        });
+    </script>
+    {% endif %}
 {% endblock %}
