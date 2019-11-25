@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -38,6 +41,30 @@ class ArticleType extends AbstractType
                 'attr'      => [
                     'placeholder'   => 'www.example.com',
                     'class' => "form-control"
+                ]
+            ])
+            /*
+            ->add('category',EntityType::class, [
+                'class'         => Category::class,
+                'choice_label'  => 'name',
+                'expanded'      => false,
+                'multiple'      => false,
+                'attr'      => [
+                    'class' => 'form-control'
+                ]
+            ])
+            */
+            ->add('category',EntityType::class, [
+                'class'         => Category::class,
+                'choice_label'  => 'name',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.name', 'ASC');
+                },
+                'expanded'      => false,
+                'multiple'      => false,
+                'attr'      => [
+                    'class' => 'form-control'
                 ]
             ])
             ->add('save', SubmitType::class, [

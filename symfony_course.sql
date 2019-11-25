@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Nov 24, 2019 at 05:10 PM
+=======
+-- Generation Time: Nov 24, 2019 at 05:07 PM
+>>>>>>> doctrine-relationship
 -- Server version: 5.7.14
 -- PHP Version: 7.1.23
 

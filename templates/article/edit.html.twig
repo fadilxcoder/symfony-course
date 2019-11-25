@@ -36,8 +36,8 @@
         <hr/>
     {% endif %}
 
-    {#    {{ form_start(form) }} #}
-    {{ form_start(form, {'action': path('editArticle', {"article":article.id}), 'method': 'POST'}) }}
+    {{ form_start(form) }}
+    {#    {{ form_start(form, {'action': path('editArticle', {"article":article.id}), 'method': 'POST'}) }}#}
 
     <table>
         <tbody>
@@ -56,6 +56,10 @@
         <tr>
             <th>Homepage:</th>
             <td>{{ form_widget(form.url) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.category) }}:</th>
+            <td>{{ form_widget(form.category) }}</td>
         </tr>
         <tr>
             <th></th>
