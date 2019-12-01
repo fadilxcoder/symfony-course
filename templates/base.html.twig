@@ -12,6 +12,9 @@
             {% include 'includes/flash.html.twig' %}
             {% block body %}{% endblock %}
         </div>
+        {{ render(controller(
+            'App\\Controller\\MainController::_makeTweets', {max: 5}
+        )) }}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -1,0 +1,9 @@
+<br/><br/><br/>
+<div class="navbar-left tweets">
+    <h1 class="text-center">{{ name|upper }}</h1>
+    <ul>
+        {% for tweet in tweets %}
+            <li>{{ tweet }}</li>
+        {% endfor %}
+    </ul>
+</div>
