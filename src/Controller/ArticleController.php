@@ -105,7 +105,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/edit-article/{article}", name="editArticle")
      */
-    public function modifyArticle(Request $request, ? Article $article)
+    public function modifyArticle(Request $request, ? Article $article, ObjectCompare $objectCompare, Mailing $mailing)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -114,12 +114,16 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('showArticles');
         }
 
+        $orjObj = clone $article;
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $submittedArticle = $request->request->get('article');
             $article->setAlias('symfony-'.rand(1,99999));
             $entityManager->flush();
+            $mailing->notifyChanges($article, $objectCompare->getUpdatedFields($orjObj, $submittedArticle));
             return $this->redirectToRoute('viewArticle', [
                 'id' => $article->getId()
             ]);
@@ -147,7 +151,7 @@ class ArticleController extends AbstractController
 
             if ( $objectCompare->compareTwoObj($orjObj, $submittedArticle) == false) {
                 $articleData->setStatus($status);
-                $mailing->notifyChanges($articleData);
+                $mailing->notifyChanges($articleData, $objectCompare->getUpdatedFields($orjObj, $submittedArticle));
                 $entityManager->flush();
                 $this->addFlash(
                     'success',

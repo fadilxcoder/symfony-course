@@ -1,3 +1,10 @@
 Email Sent to ID :
 
 {{ email.id }}
+
+<br><br>
+
+Fields updated : <br>
+{% for _fields in fields %}
+- {{ _fields }} <br>
+{% endfor %}

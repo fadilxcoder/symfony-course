@@ -21,7 +21,7 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'required'  => true,
+                //'required'  => false,
                 'attr'       => [
                     'class' => "form-control"
                 ]
@@ -63,7 +63,7 @@ class ArticleType extends AbstractType
                 },
                 'expanded'      => false,
                 'multiple'      => false,
-                'attr'      => [
+                'attr'          => [
                     'class' => 'form-control'
                 ]
             ])
@@ -84,14 +84,15 @@ class ArticleType extends AbstractType
                     'expanded'   => false,
                     'multiple'   => false,
                     'choices'    => [
-                        'Inactive' => 0,
-                        'Low priority' => 1,
-                        'Medium priority' => 2,
-                        'High priority' => 3
+                        'Inactive'          => 0,
+                        'Low priority'      => 1,
+                        'Medium priority'   => 2,
+                        'High priority'     => 3
                     ],
                     'attr'       => [
                         'class' => "form-control"
-                    ]
+                    ],
+                    'data'      => $data->getStatus()
                 ]);
             }
 

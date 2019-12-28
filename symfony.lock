@@ -75,11 +75,26 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "easycorp/easy-log-handler": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
+        },
+        "files": [
+            "./config/packages/dev/easy_log_handler.yaml"
+        ]
+    },
     "egulias/email-validator": {
         "version": "2.1.11"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "monolog/monolog": {
+        "version": "1.25.2"
     },
     "nikic/php-parser": {
         "version": "v4.3.0"
@@ -89,6 +104,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "php": {
+        "version": "7.2"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -138,6 +156,21 @@
     },
     "symfony/debug": {
         "version": "v4.3.6"
+    },
+    "symfony/debug-bundle": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "f8863cbad2f2e58c4b65fa1eac892ab189971bea"
+        },
+        "files": [
+            "./config/packages/dev/debug.yaml"
+        ]
+    },
+    "symfony/debug-pack": {
+        "version": "v1.0.7"
     },
     "symfony/dependency-injection": {
         "version": "v4.3.6"
@@ -218,6 +251,23 @@
     "symfony/mime": {
         "version": "v4.3.6"
     },
+    "symfony/monolog-bridge": {
+        "version": "v4.3.9"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "6240c6d43e8237a32452f057f81816820fd56ab6"
+        },
+        "files": [
+            "./config/packages/dev/monolog.yaml",
+            "./config/packages/prod/monolog.yaml",
+            "./config/packages/test/monolog.yaml"
+        ]
+    },
     "symfony/options-resolver": {
         "version": "v4.3.6"
     },
@@ -261,6 +311,12 @@
             "./config/packages/routing.yaml",
             "./config/routes.yaml"
         ]
+    },
+    "symfony/security-core": {
+        "version": "v4.3.9"
+    },
+    "symfony/security-csrf": {
+        "version": "v4.3.9"
     },
     "symfony/service-contracts": {
         "version": "v1.1.7"

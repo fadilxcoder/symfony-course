@@ -21,24 +21,27 @@ class Mailing
         $this->twig = $environment;
     }
 
-    public function notifyChanges($article)
+    public function notifyChanges($article, $fieldsUpdated)
     {
+        /*
         $usersDetails = $this->em->getRepository(User::class)->findUsersByRole(User::ROLE);
         $arr = array();
 
         foreach ($usersDetails as $_usersDetails) {
             $arr[] = $_usersDetails->getEmail();
         }
+        */
 
         $subject = 'Symfony Course Notification';
-        //$arr = array('fadil@xcoder.developer', 'user@system.app', 'admin@system.app');
+        $arr = array('fadil@xcoder.developer', 'user@system.app', 'admin@system.app');
         $mail = (new \Swift_Message($subject))
             ->setFrom([
                 'no-reply@local.symfony.course' => "Symfony 4 Course"
             ])
             ->setTo($arr)
             ->setBody($this->twig->render('email/maj.html.twig', [
-                'email' => $article
+                'email'     => $article,
+                'fields'    => $fieldsUpdated
             ]), 'text/html');
 
         $this->mailer->send($mail);
